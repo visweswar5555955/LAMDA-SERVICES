@@ -42,7 +42,7 @@ resource "aws_lambda_function" "lambda" {
 
   environment {
     variables = {
-      greeting = "Hello"
+      greeting = "Hello viswa"
     }
   }
 }
