@@ -3,7 +3,7 @@ import json
 
 def hello(event, context):
     body = {
-        "message": "Go Serverless v1.0! Your function executed successfully for viswa function!",
+        "message": "Go Serverless v1.0! Your function executed successfully for viswa function now",
         "input": event
     }
 
