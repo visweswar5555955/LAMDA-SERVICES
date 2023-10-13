@@ -40,4 +40,4 @@ jobs:
             cd ..
             rm -rf .tmp
             echo "Installed version $(terraform -version) of Terraform"
-        shell: bash
+        #shell: bash
