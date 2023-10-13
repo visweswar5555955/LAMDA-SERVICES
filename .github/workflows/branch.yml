@@ -32,16 +32,14 @@ jobs:
 
       - name: Install Terraform
         run: |
-          wget https://releases.hashicorp.com/terraform/1.0.2/terraform_1.0.2_linux_amd64.zip
-          unzip terraform_1.0.2_linux_amd64.zip
-          mv terraform /usr/local/bin/
-          terraform --version
+          mkdir .tmp
+          curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/{{ inputs.terraform_version }}/terraform_{{ inputs.terraform_version }}_linux_amd64.zip
+          cd .tmp
+          unzip tf.zip
+          sudo mv terraform /usr/local/bin/
+          cd ..
+          rm -rf .tmp
+          echo "Installed version $(terraform -version) of Terraform"
+        shell: bash
 
-      - name: Change to Terraform directory
-        run: cd terraform
-
-      - name: Initialize Terraform
-        run: terraform init
-
-      - name: Validate Terraform
-        run: terraform validate
+  # Add any other steps you need
