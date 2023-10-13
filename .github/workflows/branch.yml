@@ -33,7 +33,7 @@ jobs:
       - name: Install Terraform
         run: |
             mkdir .tmp
-            curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/{{ inputs.terraform_version | replace("/", "") }}/terraform_{{ inputs.terraform_version | replace("/", "") }}_linux_amd64.zip
+            curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/${{ inputs.terraform_version }}/terraform_${{ inputs.terraform_version }}_linux_amd64.zip
             cd .tmp
             unzip tf.zip
             sudo mv terraform /usr/local/bin/
@@ -42,5 +42,3 @@ jobs:
             echo "Installed version $(terraform -version) of Terraform"
         shell: bash
         
-
-  # Add any other steps you need
