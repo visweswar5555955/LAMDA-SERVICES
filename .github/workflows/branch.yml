@@ -32,13 +32,15 @@ jobs:
 
       - name: Install Terraform
         run: |
-            mkdir .tmp
-            curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/${{ inputs.terraform_version }}/terraform_${{ inputs.terraform_version }}_linux_amd64.zip
-            cd .tmp
-            unzip tf.zip
-            sudo mv terraform /usr/local/bin/
-            cd ..
-            rm -rf .tmp
-            echo "Installed version $(terraform -version) of Terraform"
+          mkdir .tmp
+          curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/${{ env.TF_VERSION }}/terraform_${{ env.TF_VERSION }}_linux_amd64.zip
+          cd .tmp
+          unzip tf.zip
+          sudo mv terraform /usr/local/bin/
+          cd ..
+          rm -rf .tmp
+          echo "Installed version $(terraform -version) of Terraform"
         shell: bash
-        
+
+env:
+  TF_VERSION: ${{ github.event.inputs.terraform_version }}
