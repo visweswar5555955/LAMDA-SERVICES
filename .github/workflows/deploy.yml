@@ -1,9 +1,13 @@
 name: Deploy Workflow
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      env:
+        description: "env to deploy to"
+        required: true
+        type: choice
+        options: [main]
 
 jobs:
   deploy:
