@@ -2,7 +2,7 @@ name: Setup Job
 description: Sets up a job with the required version of Terraform.
 inputs:
     terraform_version:
-      description: Target version of Terraform to be used.
+      description: Target version of Terraforms to be used.
       required: false
       default: 1.2.2
 runs:
