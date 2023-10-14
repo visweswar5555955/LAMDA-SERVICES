@@ -1,22 +1,28 @@
 name: Setup Job
-description: "Sets up a job with the required version of Terraform."
-
+description: Sets up a job with the required version of Terraform.
 inputs:
-  terraform_version:
-    description: Target version of Terraform to be used.
-    required: false
-    default: 1.2.2
-
+    terraform_version:
+      description: Target version of Terraform to be used.
+      required: false
+      default: 1.2.2
 runs:
   using: composite
   steps:
     - run: |
-        mkdir .tmp
-        curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/${{ inputs.terraform_version }}/terraform_${{ inputs.terraform_version }}_linux_amd64.zip
-        cd .tmp
-        unzip tf.zip
-        sudo mv terraform /usr/local/bin/
-        cd ..
-        rm -rf .tmp
-        echo "Installed version $(terraform -version) of Terraform"
-      shell: bash
+          mkdir .tmp
+  
+          curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/${{ inputs.terraform_version }}/terraform_${{ inputs.terraform_version }}_linux_amd64.zip
+  
+          cd .tmp
+  
+          unzip tf.zip
+  
+          sudo mv terraform /usr/local/bin/
+  
+          cd ..
+  
+          rm -rf .tmp
+  
+          echo "Installed version $(terraform -version) of Terraform"
+        shell: bash
+  
