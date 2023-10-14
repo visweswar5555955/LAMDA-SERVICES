@@ -6,27 +6,32 @@ on:
       - main
 
 jobs:
-  setup-terraform:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Setup Job
-        description: Sets up a job with the required version of Terraform.
-        inputs:
-          terraform_version:
-            description: Target version of Terraform to be used.
-            required: false
-            default: 1.2.2
-        runs:
-          using: composite
-          steps:
-            - run: |
-                mkdir .tmp
-                curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/${{ inputs.terraform_version }}/terraform_${{ inputs.terraform_version }}_linux_amd64.zip
-                cd .tmp
-                unzip tf.zip
-                sudo mv terraform /usr/local/bin/
-                cd ..
-                rm -rf .tmp
-                echo "Installed version $(terraform -version) of Terraform"
-      shell: bash
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
