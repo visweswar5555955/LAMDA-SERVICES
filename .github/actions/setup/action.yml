@@ -17,6 +17,7 @@ runs:
     - name: Install Python
       run: |
         sudo apt-get update
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
         sudo apt-get install python${{ inputs.python_version }} python3-pip -y
         echo "Installed Python $(python${{ inputs.python_version }} --version)"
       shell: bash
