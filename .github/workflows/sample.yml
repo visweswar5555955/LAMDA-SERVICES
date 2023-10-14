@@ -7,7 +7,7 @@ on:
         description: "env to deploy to"
         required: true
         type: choice
-        options: [main]
+        options: [dev]
 
 jobs:
   deploy:
