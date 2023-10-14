@@ -1,46 +1,23 @@
-name: Branch Workflow
-
+name: Branch workflow
 on:
   push:
-    branches-ignore:
-      - main
+    branches-ignore: [main]
+    tags-ignore: ["**"]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  init_build_graph:
+    name: Initialise build graph
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    outputs:
+      flags: ${{ steps.build_graph.outputs.flags }}
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
         with:
-          python-version: 3.8
-
-      - name: Cache pip
-        uses: actions/cache@v2
+          fetch-depth: 0
+      - name: 🏗️ Setup
+        uses: ./.github/actions/setup
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 pytest
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-      - name: Set up Terraform
-        run: |
-          mkdir .tmp
-          curl -o .tmp/tf.zip https://releases.hashicorp.com/terraform/${{ inputs.terraform_version }}/terraform_${{ inputs.terraform_version }}_linux_amd64.zip
-          cd .tmp
-          unzip tf.zip
-          sudo mv terraform /usr/local/bin/
-          cd ..
-          rm -rf .tmp
-          echo "Installed version $(terraform -version) of Terraform"
-        shell: bash
-
-      - name: Initialize Terraform
-        run: terraform init
+          artifactory_token: ${{ secrets.GLOBAL_JFROG_ARTIFACTORY_TOKEN }}
+   
