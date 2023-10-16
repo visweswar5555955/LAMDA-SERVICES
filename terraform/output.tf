@@ -1,4 +1,7 @@
-output "lambda" {
-  value = "${aws_lambda_function.lambda.qualified_arn}"
+output "dynamodbStreamArn" {
+  value = "${aws_lambda_function.dynamodbStream.qualified_arn}"
 }
-#terraform
+
+output "dynamoIngestionArn" {
+  value = "${aws_lambda_function.DynamoIngestion.qualified_arn}"
+}

@@ -5,17 +5,17 @@ provider "aws" {
 
 provider "archive" {}
 
-data "archive_file" "zip" {
+data "archive_file" "dynamodbStream_zip" {
   type        = "zip"
-  source_file = "newfunction.py"
-  output_path = "output/newfunction_lambda.zip"
+  source_file = "dynamodbStream.py"
+  output_path = "output/dynamodbStream.zip"
 }
 
 
-data "archive_file" "secondfunction_zip" {
+data "archive_file" "DynamoIngestion_zip" {
   type        = "zip"
-  source_file = "handler.py"
-  output_path = "output/_lambda.zip"
+  source_file = "DynamoIngestion.py"
+  output_path = "output/DynamoIngestion.zip"
 }
 
 data "aws_iam_policy_document" "policy" {
@@ -37,38 +37,37 @@ resource "aws_iam_role" "iam_for_lambda" {
   assume_role_policy = "${data.aws_iam_policy_document.policy.json}"
 }
 
-resource "aws_lambda_function" "lambda" {
-  function_name = "hello"
 
-  filename         = "${data.archive_file.zip.output_path}"
-  source_code_hash = "${data.archive_file.zip.output_base64sha256}"
+resource "aws_lambda_function" "dynamodbStream" {
+  function_name = "dynamodbStream"
+
+  filename         = "${data.archive_file.dynamodbStream_zip.output_path}"
+  source_code_hash = "${data.archive_file.dynamodbStream_zip.output_base64sha256}"
 
   role    = "${aws_iam_role.iam_for_lambda.arn}"
-  handler = "function1.handler"
+  handler = "dynamodbStream.handler"
   runtime = "python3.9"
 
   environment {
     variables = {
-      greeting = "Hello thadduuu"
+      greeting = "dynamodbStream - function"
     }
   }
 }
 
-resource "aws_lambda_function" "newfunction" {
-  function_name = "newfunction"
+resource "aws_lambda_function" "DynamoIngestion" {
+  function_name = "dynamoIngestion"
 
-  filename         = "${data.archive_file.secondfunction_zip.output_path}"
-  source_code_hash = "${data.archive_file.secondfunction_zip.output_base64sha256}"
+  filename         = "${data.archive_file.DynamoIngestion_zip.output_path}"
+  source_code_hash = "${data.archive_file.DynamoIngestion_zip.output_base64sha256}"
 
   role    = "${aws_iam_role.iam_for_lambda.arn}"
-  handler = "function1.newfunction"
+  handler = "DynamoIngestion.handler"
   runtime = "python3.9"
 
   environment {
     variables = {
-      greeting = "Hello new function"
+      greeting = "DynamoIngestion - function"
     }
   }
 }
-
- 
