@@ -7,8 +7,15 @@ provider "archive" {}
 
 data "archive_file" "zip" {
   type        = "zip"
-  source_file = "/python-services/handler.py"
-  output_path = "function_lambda.zip"
+  source_file = "newfunction.py"
+  output_path = "output/newfunction_lambda.zip"
+}
+
+
+data "archive_file" "secondfunction_zip" {
+  type        = "zip"
+  source_file = "handler.py"
+  output_path = "output/_lambda.zip"
 }
 
 data "aws_iam_policy_document" "policy" {
@@ -37,7 +44,7 @@ resource "aws_lambda_function" "lambda" {
   source_code_hash = "${data.archive_file.zip.output_base64sha256}"
 
   role    = "${aws_iam_role.iam_for_lambda.arn}"
-  handler = "hello.handler"
+  handler = "function1.handler"
   runtime = "python3.9"
 
   environment {
@@ -46,3 +53,22 @@ resource "aws_lambda_function" "lambda" {
     }
   }
 }
+
+resource "aws_lambda_function" "newfunction" {
+  function_name = "newfunction"
+
+  filename         = "${data.archive_file.secondfunction_zip.output_path}"
+  source_code_hash = "${data.archive_file.secondfunction_zip.output_base64sha256}"
+
+  role    = "${aws_iam_role.iam_for_lambda.arn}"
+  handler = "function1.newfunction"
+  runtime = "python3.9"
+
+  environment {
+    variables = {
+      greeting = "Hello new function"
+    }
+  }
+}
+
+ 
